@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>コンディションアンケート</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <h1>ログインしてアンケートに回答</h1>
+
+  <form id="login-form">
+    <input type="email" id="email" placeholder="メールアドレス" required />
+    <input type="password" id="password" placeholder="パスワード" required />
+    <button type="submit">ログイン</button>
+  </form>
+
+  <form id="survey-form" style="display:none;">
+    <label>今日のコンディション</label>
+    <select id="condition">
+      <option value="3">☀️ 元気</option>
+      <option value="2">🌤️ まあまあ</option>
+      <option value="1">🌧️ しんどい</option>
+    </select>
+    <label>備考</label>
+    <textarea id="comment" rows="3"></textarea>
+    <button type="submit">送信</button>
+  </form>
+</body>
+</html>
