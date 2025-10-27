@@ -1,7 +1,7 @@
 // Supabaseの初期化（最初に書く！）
 const supabase = window.supabase.createClient(
-  'https://YOUR_PROJECT_ID.supabase.co',
-  'YOUR_PUBLIC_ANON_KEY'
+  'https://kgrvnxtmfgbwpegexwqy.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtncnZueHRtZmdid3BlZ2V4d3F5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEyMzUyNTQsImV4cCI6MjA3NjgxMTI1NH0.ePwTBmz-6m4S0AkbE6kGwr68Bsh05CyaD_ZoYTQUfDY'
 )
 
 // ログイン後にアンケートフォームを表示する関数
@@ -61,3 +61,4 @@ document.getElementById('survey-form').addEventListener('submit', async (e) => {
     document.getElementById('survey-form').reset()
   }
 })
+
