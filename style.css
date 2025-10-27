@@ -1,0 +1,46 @@
+body {
+  font-family 'Segoe UI', sans-serif;
+  background-color #f5f7fa;
+  color #333;
+  margin 0;
+  padding 2rem;
+  max-width 600px;
+  margin-left auto;
+  margin-right auto;
+}
+
+h1 {
+  text-align center;
+  margin-bottom 2rem;
+}
+
+form {
+  background-color #fff;
+  padding 1.5rem;
+  border-radius 8px;
+  box-shadow 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom 2rem;
+}
+
+input, select, textarea, button {
+  display block;
+  width 100%;
+  margin-top 1rem;
+  padding 0.75rem;
+  font-size 1rem;
+  border 1px solid #ccc;
+  border-radius 6px;
+  box-sizing border-box;
+}
+
+button {
+  background-color #0078d4;
+  color white;
+  border none;
+  cursor pointer;
+  transition background-color 0.2s ease;
+}
+
+buttonhover {
+  background-color #005ea2;
+}
