@@ -3,10 +3,20 @@ const supabase = supabase.createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtncnZueHRtZmdid3BlZ2V4d3F5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEyMzUyNTQsImV4cCI6MjA3NjgxMTI1NH0.ePwTBmz-6m4S0AkbE6kGwr68Bsh05CyaD_ZoYTQUfDY'
 )
 
+function showSurveyForm() {
+  document.getElementById('login-form').style.display = 'none'
+  document.getElementById('survey-form').style.display = 'block'
+}
+
 document.getElementById('login-form').addEventListener('submit', async (e) => {
   e.preventDefault()
   const email = document.getElementById('email').value
   const password = document.getElementById('password').value
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password })
   if (error) {
@@ -42,4 +52,5 @@ document.getElementById('survey-form').addEventListener('submit', async (e) => {
   } else {
     alert('送信完了！ありがとうございました')
   }
+
 })
