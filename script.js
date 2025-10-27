@@ -18,7 +18,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     password
   })
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+  const { userData, error } = await supabase.auth.signInWithPassword({ email, password })
   if (error) {
     alert('ログイン失敗: ' + error.message)
   } else {
@@ -34,16 +34,16 @@ document.getElementById('survey-form').addEventListener('submit', async (e) => {
   const comment = document.getElementById('comment').value
 
   const {
-    data: { user }
+    data: userData 
   } = await supabase.auth.getUser()
 
-  const { error } = await supabase.from('responses').insert([
+  await supabase.from('responses').insert([
     {
-      user_id: user.id,
-      email: user.email,
-      condition,
-      comment,
-      submitted_at: new Date().toISOString()
+    user_id: userData.user.id,
+    email: userData.user.email,
+    condition,
+    comment,
+    created_at: new Date().toISOString()
     }
   ])
 
@@ -54,3 +54,4 @@ document.getElementById('survey-form').addEventListener('submit', async (e) => {
   }
 
 })
+
