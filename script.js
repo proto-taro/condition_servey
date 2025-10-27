@@ -10,6 +10,14 @@ function showSurveyForm() {
   document.getElementById('survey-form').style.display = 'block'
 }
 
+// ページ読み込み時にログイン済みか確認
+window.addEventListener('DOMContentLoaded', async () => {
+  const { data: userData } = await supabase.auth.getUser()
+  if (userData?.user) {
+    showSurveyForm()
+  }
+})
+
 // ログイン処理
 document.getElementById('login-form').addEventListener('submit', async (e) => {
   e.preventDefault()
