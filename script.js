@@ -18,7 +18,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     password
   })
 
-  const { userData, error } = await supabase.auth.signInWithPassword({ email, password })
+  const { userData, insertError } = await supabase.auth.signInWithPassword({ email, password })
   if (error) {
     alert('ログイン失敗: ' + error.message)
   } else {
@@ -37,7 +37,8 @@ document.getElementById('survey-form').addEventListener('submit', async (e) => {
     data: userData 
   } = await supabase.auth.getUser()
 
-  await supabase.from('responses').insert([
+  const { error: insertError 
+  } = await supabase.from('responses').insert([
     {
     user_id: userData.user.id,
     email: userData.user.email,
@@ -47,11 +48,12 @@ document.getElementById('survey-form').addEventListener('submit', async (e) => {
     }
   ])
 
-  if (error) {
+  if (insertError) {
     alert('送信失敗: ' + error.message)
   } else {
     alert('送信完了！ありがとうございました')
   }
 
 })
+
 
