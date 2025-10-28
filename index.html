@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
 <head>
   <meta charset="UTF-8" />
   <title>コンディションアンケート</title>
@@ -7,15 +8,15 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  <h1>ログインしてアンケートに回答</h1>
-
-  <form id="login-form">
+  <h1 id="title">ログインしてアンケートに回答</h1>
+    <p id="status">ログイン状態を確認中…</p>
+  <div id="login-form">
     <input type="email" id="email" placeholder="メールアドレス" required />
     <input type="password" id="password" placeholder="パスワード" required />
     <button type="submit">ログイン</button>
-  </form>
+  </div>
 
-  <form id="survey-form" style="display:none;">
+  <div id="survey-form" style="display:none;">
     <label>今日のコンディション</label>
     <select id="condition">
       <option value="3">☀️ 3</option>
@@ -25,7 +26,10 @@
     <label>備考</label>
     <textarea id="comment" rows="3"></textarea>
     <button type="submit">送信</button>
-  </form>
+  </div>
 </body>
 </html>
+<p id="thank-you" style="display: none; font-weight: bold; font-size: 1.2em;">回答ありがとうございました！</p>
 <link rel="stylesheet" href="style.css" />
+
+<button id="logout-btn" style="display: none;">ログアウト</button>
