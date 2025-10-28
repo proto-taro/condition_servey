@@ -8,34 +8,85 @@ const supabase = window.supabase.createClient(
 function showSurveyForm() {
   document.getElementById('login-form').style.display = 'none'
   document.getElementById('survey-form').style.display = 'block'
+  document.getElementById('login-form').classList.add('hidden')
+  document.getElementById('survey-form').classList.remove('hidden')
+  document.getElementById('survey-form').style.display = 'none'
+  document.getElementById('thank-you').style.display = 'block'
 }
 
 // ページ読み込み時にログイン済みか確認
-window.addEventListener('DOMContentLoaded', async () => {
-  const { data: userData } = await supabase.auth.getUser()
-  if (userData?.user) {
-    showSurveyForm()
-  }
+document.addEventListener('DOMContentLoaded', () => {
+  const loginButton = document.querySelector('#login-form button')
+
+  loginButton.addEventListener('click', async () => {
+    const email = document.getElementById('email').value
+    const password = document.getElementById('password').value
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
+
+    if (error) {
+      alert('ログイン失敗: ' + error.message)
+      return
+    }
+
+    // ログイン成功 → 表示切り替え
+   const { data: { user } } = await supabase.auth.getUser()
+
+if (user) {
+  document.getElementById('title').textContent = '今日のコンディション'
+  document.getElementById('status').textContent = `ようこそ ${user.email} さん、アンケートに回答してください`
+  document.getElementById('login-form').style.display = 'none'
+  document.getElementById('survey-form').style.display = 'block'
+  document.getElementById('logout-btn').style.display = 'inline'
+} else {
+  document.getElementById('title').textContent = 'ログインしてアンケートに回答'
+  document.getElementById('status').textContent = 'ログインしてアンケートに回答'
+  document.getElementById('login-form').style.display = 'block'
+  document.getElementById('survey-form').style.display = 'none'
+  document.getElementById('logout-btn').style.display = 'none'
+}
+
+  })
 })
 
-// ログイン処理
-document.getElementById('login-form').addEventListener('submit', async (e) => {
-  e.preventDefault()
+document.getElementById('logout-btn').addEventListener('click', async () => {
+  await supabase.auth.signOut()
+  location.reload() // ページをリロードしてログイン状態を反映
+})
 
-  const email = document.getElementById('email').value
-  const password = document.getElementById('password').value
+document.addEventListener('DOMContentLoaded', () => {
+  const submitButton = document.querySelector('#survey-form button')
 
-  const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
-    email,
-    password
+  submitButton.addEventListener('click', async (event) => {
+    event.preventDefault() // ← ページリロード防止
+
+    const condition = document.getElementById('condition').value
+    const comment = document.getElementById('comment').value
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      alert('ログインしてから送信してください')
+      return
+    }
+
+    const { error } = await supabase.from('responses').insert([{
+      email: user.email,
+      condition: parseInt(condition),
+      comment: comment,
+      created_at: new Date().toISOString()
+    }])
+
+    if (error) {
+      alert('送信失敗: ' + error.message)
+    } else {
+      alert('送信完了！')
+      document.getElementById('survey-form').style.display = 'none'
+      document.getElementById('status').textContent = '回答ありがとうございました！'
+    }
   })
-
-  if (loginError) {
-    alert('ログイン失敗: ' + loginError.message)
-  } else {
-    console.log('ログイン成功:', loginData)
-    showSurveyForm()
-  }
 })
 
 // アンケート送信処理
@@ -69,4 +120,3 @@ document.getElementById('survey-form').addEventListener('submit', async (e) => {
     document.getElementById('survey-form').reset()
   }
 })
-
