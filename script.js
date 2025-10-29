@@ -12,7 +12,7 @@ function showSurveyForm() {
   document.getElementById('survey-form').classList.remove('hidden')
   document.getElementById('survey-form').style.display = 'none'
   document.getElementById('thank-you').style.display = 'block'
-}
+  }
 
 // ページ読み込み時にログイン済みか確認
 document.addEventListener('DOMContentLoaded', () => {
@@ -55,42 +55,99 @@ if (user) {
 document.getElementById('logout-btn').addEventListener('click', async () => {
   await supabase.auth.signOut()
   location.reload() // ページをリロードしてログイン状態を反映
-})
+ })
 
 document.addEventListener('DOMContentLoaded', () => {
-  const submitButton = document.querySelector('#survey-form button')
+  // ログインボタンの取得と処理
+  const loginButton = document.querySelector('#login-form button')
+  loginButton.addEventListener('click', async () => {
+    const email = document.getElementById('email').value
+    const password = document.getElementById('password').value
 
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+
+    if (!error) {
+      showAfterLogin()
+    } else {
+      alert('ログイン失敗: ' + error.message)
+    }
+  })
+
+  // ログアウト処理
+  document.getElementById('logout-btn').addEventListener('click', async () => {
+    await supabase.auth.signOut()
+    location.reload()
+  })
+
+  // ログイン後の表示制御
+  const showAfterLogin = () => {
+    document.getElementById('form-description').classList.remove('hidden')
+    document.getElementById('survey-form').classList.remove('hidden')
+    document.getElementById('logout-btn').style.display = 'inline'
+  }
+
+  // 送信ボタンの処理
+  document.addEventListener('DOMContentLoaded', () => {
+  const submitButton = document.querySelector('#survey-form button')
   submitButton.addEventListener('click', async (event) => {
-    event.preventDefault() // ← ページリロード防止
+    event.preventDefault()
 
     const condition = document.getElementById('condition').value
     const comment = document.getElementById('comment').value
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
 
-    if (!user) {
-      alert('ログインしてから送信してください')
-      return
+   if (userError || !user) {
+      console.error('ユーザー取得エラー:', userError)
+  alert('ログインしてから送信してください')
+  return
+}
+
+    // 投稿済みチェック（テストアカウント除外）
+    if (user.email !== 'sales@prsys.jp') {
+      const { data: recent } = await supabase
+        .from('responses')
+        .select('created_at')
+        .eq('email', user.email)
+        .order('created_at', { ascending: false })
+        .limit(1)
+
+      if (recent && recent.length > 0) {
+        const last = new Date(recent[0].created_at)
+        const now = new Date()
+        const diffDays = (now - last) / (1000 * 60 * 60 * 24)
+
+        if (diffDays < 7) {
+          alert('前回の投稿から7日経っていません。')
+          return
+        }
+      }
     }
+        // 投稿処理
+      const { error } = await supabase.from('responses').insert([{
+        email: user.email,
+        condition: parseInt(condition),
+        comment: comment,
+        created_at: new Date().toISOString()
+      }])
+  
 
-    const { error } = await supabase.from('responses').insert([{
-      email: user.email,
-      condition: parseInt(condition),
-      comment: comment,
-      created_at: new Date().toISOString()
-    }])
+     if (error) {
+        console.error('投稿エラー:', error)
+        alert('送信失敗: ' + error.message)
+        } else {
+         alert('送信完了！')
+         setTimeout(() => {
+         document.getElementById('survey-form').style.display = 'none'
+         document.getElementById('status').textContent = '回答ありがとうございました！'
+         window.location.href = 'thankyou.html'
+         }, 500) // ← 少し遅らせてポート閉鎖を回避
+        }
+        })
+      })
+    }) 
 
-    if (error) {
-      alert('送信失敗: ' + error.message)
-    } else {
-      alert('送信完了！')
-      document.getElementById('survey-form').style.display = 'none'
-      document.getElementById('status').textContent = '回答ありがとうございました！'
-    }
-  })
-})
-
-// アンケート送信処理
-document.getElementById('survey-form').addEventListener('submit', async (e) => {
+  // アンケート送信処理
+  document.getElementById('survey-form').addEventListener('submit', async (e) => {
   e.preventDefault()
 
   const condition = parseInt(document.getElementById('condition').value)
@@ -102,7 +159,7 @@ document.getElementById('survey-form').addEventListener('submit', async (e) => {
     alert('ユーザー情報の取得に失敗しました')
     return
   }
-
+  
   const { error: insertError } = await supabase.from('responses').insert([
     {
       user_id: userData.user.id,
@@ -112,11 +169,11 @@ document.getElementById('survey-form').addEventListener('submit', async (e) => {
       created_at: new Date().toISOString()
     }
   ])
-
+  
   if (insertError) {
     alert('送信失敗: ' + insertError.message)
   } else {
     alert('送信完了！ありがとうございました')
     document.getElementById('survey-form').reset()
-  }
-})
+    }
+  })
