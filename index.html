@@ -6,16 +6,16 @@
   <meta charset="UTF-8" />
   <title>コンディションアンケート</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script src="script.js" defer></script>
+  <script type="module" src="script.js" defer></script>
 </head>
 <body>
   <h1 id="title">ログインしてアンケートに回答</h1>
     <p id="status">ログイン状態を確認中…</p>
-  <div id="login-form">
-    <input type="email" id="email" placeholder="メールアドレス" required />
-    <input type="password" id="password" placeholder="パスワード" required />
+  <form id="login-form">
+    <input type="email" id="email" autocomplete="username" />
+    <input type="password" id="password" autocomplete="current-password" />
     <button type="submit">ログイン</button>
-  </div>
+  </form>
 
   <div id="survey-form" style="display:none;">
     <label>今日のコンディション</label>
@@ -33,6 +33,17 @@
 <p id="thank-you" style="display: none; font-weight: bold; font-size: 1.2em;">回答ありがとうございました！</p>
 <link rel="stylesheet" href="style.css" />
 
-
 <button id="logout-btn" style="display: none;">ログアウト</button>
 
+<div id="form-description" class="hidden" style="margin-top: 1.5rem; max-width: 500px; font-size: 0.95rem; line-height: 1.6;">
+  <p>
+  💡このフォームは、あなたの今日の<br />
+    コンディションを報告するためのものです。
+</p>
+  <ul>
+    <li>調子が良ければ <strong>晴れ（3）</strong></li>
+    <li>少しでも調子が晴れない場合は <strong>曇り（2）</strong></li>
+    <li>体調面・精神面・業務面しんどい時は <strong>雨（1）</strong></li>
+    <li>相談事・不安感などなんでも備考欄にお書きください。</li>
+  </ul>
+</div>
