@@ -70,6 +70,7 @@ buttonhover {
   pointer-events: none;
   height: 0;
   overflow: hidden;
+  display: none;
 }
 #condition {
   font-size: 1.5rem;         /* 文字サイズを大きく */
@@ -102,4 +103,20 @@ buttonhover {
 textarea {
   font-size: 1rem;
   resize: vertical; /* 横幅の拡大を防ぐ */
+}
+
+#form-description {
+  color: #444;
+  background-color: #f2f2f2;
+  padding: 1rem;
+  border-radius: 7px;
+  margin-top: 1.5rem;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1rem;
+}
+#form-description ul {
+  padding-left: 1.2rem;
+}
+#form-description li {
+  margin-bottom: 0.5rem;
 }
