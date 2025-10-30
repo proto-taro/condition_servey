@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8" />
   <title>コンディションアンケート</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script type="module" src="script.js" defer></script>
 </head>
 <body>
   <h1 id="title">ログインしてアンケートに回答</h1>
@@ -17,7 +15,7 @@
     <button type="submit">ログイン</button>
   </form>
 
-  <div id="survey-form" style="display:none;">
+  <form id="survey-form" style="display:none;">
     <label>今日のコンディション</label>
     <select id="condition">
       <option value="3">☀️ 3</option>
@@ -26,8 +24,10 @@
     </select>
     <label>備考</label>
     <textarea id="comment" rows="3"></textarea>
-    <button type="submit">送信</button>
-  </div>
+    <button type="button">送信</button>
+  </form>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script type="module" src="script.js" defer></script>
 </body>
 </html>
 <p id="thank-you" style="display: none; font-weight: bold; font-size: 1.2em;">回答ありがとうございました！</p>
