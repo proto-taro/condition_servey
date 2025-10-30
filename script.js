@@ -122,7 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (recent && recent.length > 0) {
         const last = new Date(recent[0].created_at)
         const now = new Date()
-        const diffDays = (now - last) / (1000 * 60 * 60 * 24)
+        const diffMs = now - last
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
 
         if (diffDays < 7) {
           alert('前回の投稿から7日経っていません。')
@@ -183,5 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('survey-form').reset()
     }
   })
+
 
 
