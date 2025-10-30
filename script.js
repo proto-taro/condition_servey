@@ -147,7 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
          setTimeout(() => {
          document.getElementById('survey-form').style.display = 'none'
          document.getElementById('status').textContent = '回答ありがとうございました！'
-         window.location.href = 'thankyou.html'
          }, 500) // ← 少し遅らせてポート閉鎖を回避
         }
        })
@@ -184,4 +183,5 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('survey-form').reset()
     }
   })
+
 
