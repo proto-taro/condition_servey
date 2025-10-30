@@ -23,8 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
     return
   }
 
-  loginButton.addEventListener('click', async () => {
-
+  loginButton.addEventListener('click', async (event) => {
+    event.preventDefault() // ← これがないとフォーム送信が発生する
+      
     const email = document.getElementById('email').value
     const password = document.getElementById('password').value
 
@@ -183,3 +184,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('survey-form').reset()
     }
   })
+
