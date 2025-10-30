@@ -1,3 +1,4 @@
+
 // Supabaseの初期化（最初に書く！）
 const supabase = window.supabase.createClient(
   'https://kgrvnxtmfgbwpegexwqy.supabase.co',
@@ -17,14 +18,19 @@ function showSurveyForm() {
 // ページ読み込み時にログイン済みか確認
 document.addEventListener('DOMContentLoaded', () => {
   const loginButton = document.querySelector('#login-form button')
+  if (!loginButton) {
+    console.error('login-button が見つかりません')
+    return
+  }
 
   loginButton.addEventListener('click', async () => {
+
     const email = document.getElementById('email').value
     const password = document.getElementById('password').value
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
-      password
+      password,
     })
 
     if (error) {
@@ -52,11 +58,6 @@ if (user) {
   })
 })
 
-document.getElementById('logout-btn').addEventListener('click', async () => {
-  await supabase.auth.signOut()
-  location.reload() // ページをリロードしてログイン状態を反映
- })
-
 document.addEventListener('DOMContentLoaded', () => {
   // ログインボタンの取得と処理
   const loginButton = document.querySelector('#login-form button')
@@ -78,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     await supabase.auth.signOut()
     location.reload()
   })
+})
 
   // ログイン後の表示制御
   const showAfterLogin = () => {
@@ -89,6 +91,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // 送信ボタンの処理
   document.addEventListener('DOMContentLoaded', () => {
   const submitButton = document.querySelector('#survey-form button')
+  if (!submitButton) {
+    console.error('submitButton が見つかりません')
+    return
+  }
+
   submitButton.addEventListener('click', async (event) => {
     event.preventDefault()
 
@@ -142,9 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
          window.location.href = 'thankyou.html'
          }, 500) // ← 少し遅らせてポート閉鎖を回避
         }
-        })
-      })
-    }) 
+       })
+    })  
 
   // アンケート送信処理
   document.getElementById('survey-form').addEventListener('submit', async (e) => {
