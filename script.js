@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loginButton.addEventListener('click', async (event) => {
     event.preventDefault() // ← これがないとフォーム送信が発生する
-      
+
     const email = document.getElementById('email').value
     const password = document.getElementById('password').value
 
@@ -111,13 +111,20 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
     // 投稿済みチェック（テストアカウント除外）
+    async function checkRecentPost(email) {
     if (user.email !== 'sales@prsys.jp') {
-      const { data: recent } = await supabase
+    
+      const { data: recent, error } = await supabase
         .from('responses')
         .select('created_at')
-        .eq('email', user.email)
+        .eq('email', email)
         .order('created_at', { ascending: false })
         .limit(1)
+
+    if (error) {
+      console.error('履歴取得エラー:', error)
+         return false
+       }
 
       if (recent && recent.length > 0) {
         const last = new Date(recent[0].created_at)
@@ -126,19 +133,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
 
         if (diffDays < 7) {
-          alert('前回の投稿から7日経っていません。')
+          alert(`前回の投稿は ${diffDays} 日前です。7日経過後に再投稿できます。`)
           return
         }
       }
+
+      return true
     }
         // 投稿処理
-      const { error } = await supabase.from('responses').insert([{
+        const { error } = await supabase.from('responses').insert([
+  {
         email: user.email,
         condition: parseInt(condition),
         comment: comment,
         created_at: new Date().toISOString()
       }])
-  
 
      if (error) {
         console.error('投稿エラー:', error)
@@ -146,13 +155,13 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
          alert('送信完了！')
          setTimeout(() => {
-         document.getElementById('survey-form').style.display = 'none'
-         document.getElementById('status').textContent = '回答ありがとうございました！'
+           document.getElementById('survey-form').style.display = 'none'
+           document.getElementById('status').textContent = '回答ありがとうございました！'
          }, 500) // ← 少し遅らせてポート閉鎖を回避
-        }
-       })
+       }
+      } 
     })  
-
+})
   // アンケート送信処理
   document.getElementById('survey-form').addEventListener('submit', async (e) => {
   e.preventDefault()
@@ -184,6 +193,3 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('survey-form').reset()
     }
   })
-
-
-
